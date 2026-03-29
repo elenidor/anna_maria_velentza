@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dr. Anna-Maria Velentza — Human-Centered Technology Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0F1A;
+      --surface: #131929;
+      --surface2: #1A2236;
+      --ink: #F0EEF8;
+      --ink2: #A8A4C0;
+      --electric: #5B5FFF;
+      --electric-light: #8387FF;
+      --electric-dim: rgba(91,95,255,0.12);
+      --magenta: #E040C8;
+      --magenta-dim: rgba(224,64,200,0.1);
+      --gold: #FFB830;
+      --line: rgba(255,255,255,0.08);
+      --line2: rgba(255,255,255,0.14);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      background:rgba(11,15,26,0.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line2);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 clamp(1.5rem, 6vw, 5vw); height:64px;
+    }
+    .nav-name { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--ink); text-decoration:none; letter-spacing:0.01em; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; font-weight:500; color:var(--ink2); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--electric-light); }
+    .nav-toggle { display:none; background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--ink); }
+
+    /* HERO */
+    #hero {
+      min-height:100vh; background:var(--bg);
+      display:flex; align-items:center;
+      padding:80px clamp(1.5rem, 6vw, 5vw) 0;
+    }
+    .hero-inner {
+      max-width:1240px; margin:0 auto; width:100%;
+      display:grid; grid-template-columns:1fr 400px;
+      align-items:center; gap:4rem;
+    }
+    .hero-tag {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+      color:var(--electric-light); background:var(--electric-dim);
+      border:1px solid rgba(91,95,255,0.25);
+      padding:0.4rem 1rem; border-radius:100px; margin-bottom:1.4rem;
+    }
+    .hero-tag::before { content:'●'; font-size:0.45rem; color:var(--electric-light); }
+    h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(3.2rem,5.5vw,5rem);
+      font-weight:900; line-height:1.04;
+      margin-bottom:0.7rem; color:var(--ink);
+    }
+    h1 em { font-style:italic; color:var(--electric-light); display:block; }
+    .hero-role { font-size:0.85rem; font-weight:500; letter-spacing:0.06em; color:var(--ink2); margin-bottom:1.1rem; }
+    .hero-role span { color:var(--magenta); }
+    .hero-bio { font-size:1.02rem; color:rgba(240,238,248,0.7); max-width:540px; margin-bottom:2rem; line-height:1.8; }
+    .hero-stats { display:flex; gap:2.5rem; margin-bottom:2rem; }
+    .hero-stat-num { font-family:'Playfair Display',serif; font-size:2.4rem; font-weight:900; color:var(--electric-light); line-height:1; }
+    .hero-stat-label { font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink2); font-weight:500; margin-top:0.15rem; }
+    .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; font-family:'Space Grotesk',sans-serif; font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; border-radius:4px; transition:all 0.2s; cursor:pointer; font-weight:700; }
+    .btn-primary { background:var(--electric); color:#fff; border:2px solid var(--electric); }
+    .btn-primary:hover { background:var(--electric-light); border-color:var(--electric-light); }
+    .btn-outline { background:transparent; color:var(--ink); border:2px solid var(--line2); }
+    .btn-outline:hover { border-color:var(--electric); color:var(--electric-light); }
+    .hero-badges { display:flex; flex-direction:column; gap:0.55rem; }
+    .badge {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      font-size:0.73rem; font-weight:500; color:var(--ink2);
+      background:var(--surface); border:1px solid var(--line2);
+      padding:0.45rem 0.9rem; border-radius:4px; width:fit-content;
+    }
+    .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); flex-shrink:0; }
+
+    /* HERO PHOTO */
+    .hero-photo-col { position:relative; }
+    .hero-photo-col::before {
+      content:''; position:absolute; top:-16px; left:-16px;
+      width:100%; height:100%;
+      border:2px solid var(--electric); border-radius:8px; opacity:0.3;
+      pointer-events:none;
+    }
+    .hero-photo-col::after {
+      content:''; position:absolute; bottom:-16px; right:-16px;
+      width:60%; height:60%;
+      background: radial-gradient(circle, rgba(91,95,255,0.25) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .hero-photo {
+      width:100%; aspect-ratio:3/4; object-fit:cover; object-position: center top;
+      border-radius:8px; display:block; position:relative; z-index:1;
+      border:1px solid var(--line2);
+    }
+
+    /* SECTIONS */
+    section { padding:100px clamp(1.5rem, 6vw, 5vw); }
+    .section-inner { max-width:1100px; margin:0 auto; }
+    .section-eyebrow {
+      font-size:0.68rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--electric-light); margin-bottom:0.6rem;
+      display:flex; align-items:center; gap:0.75rem;
+    }
+    .section-eyebrow::before { content:''; width:32px; height:2px; background:var(--electric); border-radius:2px; }
+    h2 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,3.5vw,3rem); font-weight:900; color:var(--ink); line-height:1.15; margin-bottom:3rem; }
+
+    /* ABOUT */
+    #about { background:var(--surface); }
+    .about-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:start; }
+    .about-text p { color:rgba(240,238,248,0.7); margin-bottom:1.2rem; font-size:1rem; }
+    .highlights { margin-top:2rem; }
+    .highlights-title { font-size:0.68rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--magenta); margin-bottom:1rem; }
+    .highlight-item { display:flex; gap:0.8rem; align-items:flex-start; margin-bottom:0.85rem; }
+    .hi-dot { width:8px; height:8px; border-radius:50%; background:var(--magenta); flex-shrink:0; margin-top:0.55rem; }
+    .highlight-item p { font-size:0.9rem; color:rgba(240,238,248,0.65); }
+    .about-facts { display:flex; flex-direction:column; }
+    .fact-item { padding:1.1rem 0; border-bottom:1px solid var(--line); }
+    .fact-item:first-child { border-top:1px solid var(--line); }
+    .fact-label { font-size:0.65rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--electric-light); margin-bottom:0.35rem; }
+    .fact-value { font-size:0.9rem; color:rgba(240,238,248,0.72); line-height:1.55; }
+    .fact-value a { color:var(--electric-light); text-decoration:none; }
+    .fact-value a:hover { text-decoration:underline; }
+
+    /* RESEARCH */
+    #research { background:var(--bg); }
+    .research-list { display:flex; flex-direction:column; }
+    .research-item { display:grid; grid-template-columns:60px 1fr auto; gap:2rem; padding:1.8rem 0; border-bottom:1px solid var(--line); }
+    .research-item:first-of-type { border-top:1px solid var(--line); }
+    .research-year { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--ink2); padding-top:0.2rem; }
+    .research-content h3 { font-size:1rem; font-weight:700; color:var(--ink); margin-bottom:0.3rem; line-height:1.4; }
+    .pub-venue { font-size:0.8rem; color:var(--electric-light); font-style:italic; margin-bottom:0.25rem; }
+    .pub-authors { font-size:0.8rem; color:var(--ink2); }
+    .pub-authors strong { color:var(--ink); }
+    .research-tags { display:flex; flex-direction:column; gap:0.35rem; align-items:flex-end; }
+    .tag { font-size:0.62rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:0.25rem 0.7rem; border-radius:100px; white-space:nowrap; }
+    .tag-journal { background:var(--electric-dim); color:var(--electric-light); border:1px solid rgba(91,95,255,0.3); }
+    .tag-conference { background:rgba(255,184,48,0.1); color:var(--gold); border:1px solid rgba(255,184,48,0.3); }
+    .tag-book { background:var(--magenta-dim); color:var(--magenta); border:1px solid rgba(224,64,200,0.3); }
+    .tag-under-review { background:rgba(255,100,80,0.1); color:#FF8070; border:1px solid rgba(255,100,80,0.3); }
+    .pub-more { margin-top:2.5rem; text-align:center; }
+    .pub-scholar-link { display:inline-flex; align-items:center; gap:0.5rem; font-size:0.78rem; font-weight:700; color:var(--electric-light); text-decoration:none; border:2px solid var(--electric); padding:0.7rem 1.6rem; border-radius:4px; transition:all 0.2s; letter-spacing:0.06em; text-transform:uppercase; }
+    .pub-scholar-link:hover { background:var(--electric); color:#fff; }
+
+    /* PROJECTS */
+    #projects { background:var(--surface); }
+    .projects-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .project-card { border-radius:8px; overflow:hidden; border:1px solid var(--line2); transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s; background:var(--surface2); }
+    .project-card:hover { transform:translateY(-6px); box-shadow:0 20px 60px rgba(91,95,255,0.2); border-color:rgba(91,95,255,0.4); }
+    .project-img { width:100%; height:210px; object-fit:cover; display:block; }
+    .project-img-placeholder { width:100%; height:210px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--ink2); letter-spacing:0.06em; font-weight:500; }
+    .project-img-placeholder.p1 { background:linear-gradient(135deg,#1a1a3e,#2d1b6b); }
+    .project-img-placeholder.p2 { background:linear-gradient(135deg,#1a0d2e,#3d1060); }
+    .project-img-placeholder.p3 { background:linear-gradient(135deg,#0d1a1a,#0a4040); }
+    .project-body { padding:1.4rem; }
+    .project-tag { font-size:0.62rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--electric-light); background:var(--electric-dim); border:1px solid rgba(91,95,255,0.2); padding:0.2rem 0.65rem; border-radius:100px; display:inline-block; margin-bottom:0.65rem; }
+    .project-body h3 { font-size:1rem; font-weight:700; margin-bottom:0.45rem; color:var(--ink); line-height:1.35; }
+    .project-body p { font-size:0.85rem; color:var(--ink2); line-height:1.65; }
+    .project-link { display:inline-flex; align-items:center; gap:0.3rem; margin-top:0.9rem; font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--electric-light); text-decoration:none; }
+    .project-link:hover { color:var(--magenta); }
+
+    /* TEACHING */
+    #teaching { background:var(--bg); }
+    .teaching-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+    .course-card { padding:1.6rem; border:1px solid var(--line); border-radius:8px; background:var(--surface); position:relative; overflow:hidden; transition:border-color 0.2s,background 0.2s; }
+    .course-card:hover { border-color:rgba(91,95,255,0.4); background:var(--surface2); }
+    .course-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--electric); }
+    .course-level { font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--electric-light); margin-bottom:0.5rem; }
+    .course-card h3 { font-size:1rem; font-weight:700; margin-bottom:0.4rem; color:var(--ink); line-height:1.35; }
+    .course-card p { font-size:0.85rem; color:var(--ink2); }
+    .course-inst { font-size:0.75rem; color:var(--ink2); margin-top:0.6rem; display:flex; align-items:center; gap:0.4rem; opacity:0.7; }
+
+    /* CONTACT */
+    #contact { background:var(--surface); }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:5rem; align-items:start; }
+    .contact-info > p { color:var(--ink2); margin-bottom:2.5rem; font-size:1rem; line-height:1.8; }
+    .contact-detail { display:flex; gap:1rem; align-items:flex-start; margin-bottom:1.3rem; }
+    .contact-icon { width:38px; height:38px; border:1px solid var(--line2); border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--electric-dim); }
+    .contact-icon svg { stroke:var(--electric-light); }
+    .contact-detail small { display:block; font-size:0.65rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink2); margin-bottom:0.2rem; opacity:0.6; }
+    .contact-detail span { font-size:0.9rem; color:var(--ink); }
+    .social-links { display:flex; gap:0.65rem; margin-top:2rem; flex-wrap:wrap; }
+    .social-btn { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.7rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink2); border:1px solid var(--line2); padding:0.55rem 1rem; border-radius:4px; text-decoration:none; transition:all 0.2s; }
+    .social-btn:hover { background:var(--electric); border-color:var(--electric); color:#fff; }
+
+    /* FORM */
+    .contact-form-wrap { background:var(--surface2); border:1px solid var(--line2); border-radius:10px; padding:2.5rem; }
+    .form-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--ink); margin-bottom:2rem; }
+    .contact-form { display:flex; flex-direction:column; gap:1.1rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-group { display:flex; flex-direction:column; gap:0.4rem; }
+    .form-group label { font-size:0.65rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink2); opacity:0.7; }
+    .form-group input,.form-group textarea,.form-group select {
+      background:var(--surface); border:1px solid var(--line2);
+      color:var(--ink); padding:0.8rem 1rem; font-family:'Space Grotesk',sans-serif;
+      font-size:0.9rem; border-radius:4px; outline:none; transition:border-color 0.2s,background 0.2s;
+      -webkit-appearance:none; appearance:none;
+    }
+    .form-group input::placeholder,.form-group textarea::placeholder { color:rgba(168,164,192,0.3); }
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus { border-color:var(--electric); background:rgba(91,95,255,0.06); }
+    .form-group textarea { resize:vertical; min-height:130px; }
+    .form-group select option { background:#131929; }
+    .form-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-top:0.5rem; }
+    .form-note { font-size:0.72rem; color:var(--ink2); font-style:italic; opacity:0.5; }
+    .btn-send { background:var(--electric); color:#fff; border:none; padding:0.85rem 2.2rem; font-family:'Space Grotesk',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; border-radius:4px; cursor:pointer; transition:background 0.2s; }
+    .btn-send:hover { background:var(--electric-light); }
+    .btn-send:disabled { opacity:0.5; cursor:not-allowed; }
+    .form-success { display:none; text-align:center; padding:3rem 1rem; }
+    .form-success-icon { font-size:2.5rem; margin-bottom:0.75rem; color:var(--electric-light); }
+    .form-success h3 { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; color:var(--ink); margin-bottom:0.6rem; }
+    .form-success p { font-size:0.9rem; color:var(--ink2); }
+
+    /* FOOTER */
+    footer { background:#06080F; padding:2rem clamp(1.5rem, 6vw, 5vw); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--line); }
+    footer p { font-size:0.75rem; color:rgba(168,164,192,0.3); }
+    .footer-links { display:flex; gap:1.5rem; }
+    .footer-links a { font-size:0.7rem; font-weight:500; color:rgba(168,164,192,0.3); text-decoration:none; letter-spacing:0.08em; text-transform:uppercase; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--electric-light); }
+
+    /* ANIM */
+    .fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.7s ease,transform 0.7s ease; }
+    .fade-in.visible { opacity:1; transform:none; }
+
+    /* RESPONSIVE */
+    @media(max-width:1000px){
+      .hero-inner { display:flex; flex-direction:column; }
+      .hero-photo-col { display:block; width:100%; max-height:380px; overflow:hidden; border-radius:12px; margin-bottom:2rem; }
+      .projects-grid { grid-template-columns:1fr 1fr; }
+      .contact-grid { grid-template-columns:1fr; gap:3rem; }
+    }
+    @media(max-width:700px){
+      .about-grid,.teaching-grid { grid-template-columns:1fr; }
+      .projects-grid { grid-template-columns:1fr; }
+      .research-item { grid-template-columns:48px 1fr; }
+      .research-tags { display:none; }
+      .form-row { grid-template-columns:1fr; }
+      .nav-links { display:none; }
+      .nav-toggle { display:block; }
+      .nav-links.open { display:flex; flex-direction:column; position:absolute; top:64px; left:0; right:0; background:var(--surface); border-bottom:1px solid var(--line2); padding:1rem clamp(1.5rem, 6vw, 5vw); gap:1rem; }
+      .contact-form-wrap { padding:1.5rem; }
+      .hero-stats { gap:1.5rem; }
+      h1 { font-size:clamp(2.4rem, 10vw, 5rem); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-name">Dr. Anna-Maria Velentza</a>
+  <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#teaching">Teaching</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+  <div class="hero-text fade-in">
+    <div class="hero-tag">Human-Centered Technology Design · Researcher &amp; Lecturer</div>
+    <h1>Anna-Maria<em>Velentza, PhD</em></h1>
+    <p class="hero-role">Post-Doc @ <span>ENIB / Lab-STICC CNRS, France</span> &nbsp;·&nbsp; External Collaborator @ <span>USC Interaction Lab</span></p>
+    <p class="hero-bio">I am a human-centered researcher and lecturer specializing in socially intelligent technologies, including robotics and AI. I design, build, and test robotic systems that respond to human needs, values, and everyday experiences.</p>
+    <div class="hero-stats">
+      <div><div class="hero-stat-num">354+</div><div class="hero-stat-label">Citations</div></div>
+      <div><div class="hero-stat-num">h10</div><div class="hero-stat-label">h-index</div></div>
+      <div><div class="hero-stat-num">30+</div><div class="hero-stat-label">Publications</div></div>
+      <div><div class="hero-stat-num">10+</div><div class="hero-stat-label">Yrs Research</div></div>
+    </div>
+    <div class="hero-actions">
+      <a href="CV-Velentza.pdf" class="btn btn-primary" target="_blank">↓ Download CV</a>
+      <a href="#research" class="btn btn-outline">View Publications</a>
+    </div>
+    <div class="hero-badges">
+      <div class="badge"><div class="badge-dot"></div>Fulbright Scholar — USC, Los Angeles</div>
+      <div class="badge"><div class="badge-dot"></div>Research Award ×2 — University of Macedonia, 2021 & 2022</div>
+      <div class="badge"><div class="badge-dot"></div>Best Poster Award — University of Birmingham, 2018</div>
+    </div>
+  </div>
+  <div class="hero-photo-col fade-in" style="transition-delay:0.2s">
+    <img src="hero.jpg" alt="Dr. Anna-Maria Velentza" class="hero-photo">
+  </div>
+  </div><!-- /hero-inner -->
+</section>
+
+<section id="about">
+  <div class="section-inner">
+    <div class="section-eyebrow fade-in">Background</div>
+    <h2 class="fade-in">About Me</h2>
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <p>I am a Human-Robot Interaction researcher combining Psychology, Engineering, Computer Science, and Robotics, with a purpose to build robots for social good. Currently a Post-Doctoral Researcher at the Brest National Engineering School (ENIB) and Lab-STICC CNRS (Groups: RAMBO, COMMEDIA) in France, and an External Collaborator at the Interaction Lab, Viterbi School of Engineering, University of Southern California.</p>
+        <p>My work applies qualitative and quantitative methods to put humans at the centre of every design process — from socially assistive robots for education and healthcare, to embodied conversational agents supporting isolated and elderly populations.</p>
+        <p>I am passionate about finding the ideal specifications for a robot or smart device based on users' needs, testing usability, and building the narrative that connects technology and people.</p>
+        <div class="highlights">
+          <div class="highlights-title">Selected Highlights</div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Fulbright Scholar, Visiting Researcher — USC Interaction Lab, Los Angeles</p></div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Twice Research Award for High Quality Research, University of Macedonia (2021 & 2022)</p></div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Lecture performances on HRI in collaboration with the Media Arts department at UCLA</p></div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Fully-funded PhD from two competitive national scholarships (ESPA 2014–2020 & HFRI 2021–2024)</p></div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Invited Speaker at International Robotics Workshops and Webinars</p></div>
+          <div class="highlight-item"><div class="hi-dot"></div><p>Working in multidisciplinary labs across Europe, UK, and USA since 2014</p></div>
+        </div>
+      </div>
+      <div class="about-facts fade-in" style="transition-delay:0.15s">
+        <div class="fact-item"><div class="fact-label">Current Position</div><div class="fact-value">Post-Doc Researcher<br>ENIB / Lab-STICC CNRS, Brest, France<br><a href="https://labsticc.fr/fr/annuaire/velentza-anna-maria" target="_blank">labsticc.fr →</a></div></div>
+        <div class="fact-item"><div class="fact-label">External Collaboration</div><div class="fact-value">USC Interaction Lab<br>Viterbi School of Engineering, Los Angeles<br><a href="https://uscinteractionlab.web.app/about/people" target="_blank">uscinteractionlab.web.app →</a></div></div>
+        <div class="fact-item"><div class="fact-label">Research Areas</div><div class="fact-value">Human-Robot Interaction · Socially Assistive Robots · Human-Centered Design · Cognitive Psychology · Educational Robotics</div></div>
+        <div class="fact-item"><div class="fact-label">Education</div><div class="fact-value">PhD HRI — University of Macedonia, GR<br>Fulbright Scholar — USC Viterbi School of Engineering, Los Angeles<br>MSc Computational Neuroscience &amp; Cognitive Robotics — University of Birmingham, UK (Grade A)<br>BSc Psychology — University of Crete, GR</div></div>
+        <div class="fact-item"><div class="fact-label">Languages</div><div class="fact-value">Greek (Native) · English (C2) · German (B1) · French</div></div>
+        <div class="fact-item"><div class="fact-label">Publications</div><div class="fact-value"><a href="https://scholar.google.com/citations?user=Mv1Q3EEAAAAJ&hl=en&oi=ao" target="_blank">Google Scholar →</a><br><a href="https://www.researchgate.net/profile/Anna-Maria-Velentza" target="_blank">ResearchGate →</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="section-inner">
+    <div class="section-eyebrow fade-in">Scholarship</div>
+    <h2 class="fade-in">Selected Publications</h2>
+    <div class="research-list">
+      <div class="research-item fade-in"><div class="research-year">2026</div><div class="research-content"><h3>Systematic literature review on distance learning for autistic students</h3><div class="pub-venue">International Journal of Developmental Disabilities, 2026: 1–20</div><div class="pub-authors"><strong>A.-M. Velentza</strong>, M. Tomprou, N. Fachantidis et al.</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2025</div><div class="research-content"><h3>Socially Assistive Robot in Sexual Health: Group and Individual Student–Robot Interaction Activities</h3><div class="pub-venue">International Journal of Social Robotics, vol. 17, pp. 1161–1176</div><div class="pub-authors"><strong>A.-M. Velentza</strong>, E. Kefalouka, N. Fachantidis</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2025</div><div class="research-content"><h3>An LLM Powered Socially Assistive Robot for Supporting Cognitive Behavioral Therapy for University Students</h3><div class="pub-venue">ACM Transactions on Human–Robot Interaction (under revision)</div><div class="pub-authors">M. Kian, M. Zong, K. Fisher, <strong>A.M. Velentza*</strong> et al., M. Matarić</div></div><div class="research-tags"><span class="tag tag-under-review">Under Review</span><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2025</div><div class="research-content"><h3>Engagement and Disclosures in LLM-Powered CBT: Robot vs. Chatbot Over Time</h3><div class="pub-venue">Proc. 34th IEEE RO-MAN, Eindhoven, Netherlands</div><div class="pub-authors">M. Kian, <strong>A.M. Velentza</strong> et al., M. Matarić</div></div><div class="research-tags"><span class="tag tag-conference">Conference</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2024</div><div class="research-content"><h3>An Interactive Augmented Reality Interface for Personalized Proxemics Modeling</h3><div class="pub-venue">IEEE Robotics and Automation Magazine, 2024</div><div class="pub-authors">M. Nigro, A. O'Connell, T. Groechel, <strong>A.-M. Velentza</strong>, M. Matarić</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2022</div><div class="research-content"><h3>Human–Robot Interaction Methodology: Robot Teaching Activity</h3><div class="pub-venue">MethodsX, vol. 9, 101866</div><div class="pub-authors"><strong>A.-M. Velentza</strong>, N. Fachantidis, I. Lefkos</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2021</div><div class="research-content"><h3>Learn with Surprise from a Robot Professor</h3><div class="pub-venue">Computers &amp; Education, vol. 173, 104272</div><div class="pub-authors"><strong>A.-M. Velentza</strong>, N. Fachantidis, I. Lefkos</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+      <div class="research-item fade-in"><div class="research-year">2020</div><div class="research-content"><h3>Museum Robot Guides or Conventional Audio Guides? An Experimental Study</h3><div class="pub-venue">Advanced Robotics, vol. 34, no. 24, pp. 1571–1580</div><div class="pub-authors"><strong>A.-M. Velentza</strong>, D. Heinke, J. Wyatt</div></div><div class="research-tags"><span class="tag tag-journal">Journal</span></div></div>
+    </div>
+    <div class="pub-more fade-in">
+      <a href="https://scholar.google.com/citations?user=Mv1Q3EEAAAAJ&hl=en&oi=ao" target="_blank" class="pub-scholar-link">View all on Google Scholar →</a>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-eyebrow fade-in">Active Research</div>
+    <h2 class="fade-in">Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card fade-in">
+        <img src="img-discobot.jpg" alt="DISCOBOT" class="project-img"style="object-position:center 30%">
+        <div class="project-body"><div class="project-tag">ENIB · Lab-STICC</div><h3>DISCOBOT</h3><p>Embodied Conversational Agent supporting isolated and elderly populations. Building knowledge graphs based on conversational needs, using the NAVEL Robot.</p></div>
+      </div>
+      <div class="project-card fade-in" style="transition-delay:0.1s">
+        <img src="img-sar.jpg" alt="SAR & CBT" class="project-img"style="object-position:center center">
+        <div class="project-body"><div class="project-tag">USC Interaction Lab</div><h3>SAR &amp; Cognitive Behavioral Therapy · Robot Embodiment &amp; Mindfulness</h3><p>Large deployment with Socially Assistive Robot and LLM chatbot as mental health facilitators providing CBT exercises to undergraduate students.</p></div>
+      </div>
+      <div class="project-card fade-in" style="transition-delay:0.2s">
+        <img src="img-hri.jpg" alt="HRI Education" class="project-img"style="object-position:center center">
+        <div class="project-body"><div class="project-tag">LIRES Lab · UoM</div><h3>HRI in Educational Settings</h3><p>Designing Human-Robot Interaction experiments with diverse user groups in real educational environments using Pepper and NAO robots.</p></div>
+      </div>
+      <div class="project-card fade-in">
+        <img src="img-bb.jpg" alt="BB the Pet Robot" class="project-img"style="object-position:center center">
+        <div class="project-body"><div class="project-tag">UCLA Design Media Arts</div><h3>BB the Pet Robot</h3><p>Designing a queer feminine pet robot — lecture performances on boundaries in robot design and HRI in collaboration with artist Antigoni Tsagkaropoulou.</p></div>
+      </div>
+      <div class="project-card fade-in" style="transition-delay:0.1s">
+        <img src="img-proxemics.jpg" alt="Proxemics in SAR" class="project-img" style="object-position:center center"style="object-position:center center">
+        <div class="project-body"><div class="project-tag">USC Interaction Lab</div><h3>Proxemics in Socially Assistive Robots</h3><p>Testing an AR application to estimate the convenient approach distance for a SAR, evaluated in both elderly and general populations using the Kuri robot.</p></div>
+      </div>
+
+      <div class="project-card fade-in" style="transition-delay:0.1s">
+        <img src="img-prototypes.jpg" alt="Prototypes" class="project-img" style="object-position:center center"style="object-position:center 20%">
+        <div class="project-body"><div class="project-tag">ENIB · Lab-STICC · LIRES Lab</div><h3>Prototypes</h3><p>Physical robot prototypes designed and developed across research labs — exploring form, interaction, and embodiment in socially assistive robotics.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="teaching">
+  <div class="section-inner">
+    <div class="section-eyebrow fade-in">Pedagogy</div>
+    <h2 class="fade-in">Teaching</h2>
+    <div class="teaching-grid">
+      <div class="course-card fade-in"><div class="course-level">MSc · Winter 2025</div><h3>Embodied Conversational Agents (IEVA)</h3><p>Co-lecturer in the MSc in Computer Science 'Intelligent and Autonomous Interactive Systems'. UBO, ENIB, ENSTA Bretagne and IMT Atlantique collaboration.</p><div class="course-inst">ENIB, Brest, France</div></div>
+      <div class="course-card fade-in"><div class="course-level">MSc · Winter 2025</div><h3>Interactive Machine Learning and Deep Learning (IML)</h3><p>Co-lecturer in the MSc in Computer Science 'Intelligent and Autonomous Interactive Systems'. Engineering and computer science students.</p><div class="course-inst">ENIB, Brest, France</div></div>
+      <div class="course-card fade-in"><div class="course-level">MSc · 2021–2024</div><h3>Design &amp; Implementation of Interdisciplinary STEM Robotics Activities</h3><p>Co-lecturer in the MSc 'ICT Applications in Education and Lifelong Learning', Specialization in STEM and Robotics. Multidisciplinary student cohort.</p><div class="course-inst">University of Macedonia, Thessaloniki</div></div>
+      <div class="course-card fade-in"><div class="course-level">IEEE Seasonal School · 2019</div><h3>Putting the Humans in the Middle of the CPS Design Process</h3><p>Lecture at the HEPSoS Workshop Seasonal School for engineering students at the Aristotle University of Thessaloniki.</p><div class="course-inst">Aristotle University of Thessaloniki</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-eyebrow fade-in">Get in Touch</div>
+    <h2 class="fade-in">Contact</h2>
+    <div class="contact-grid">
+      <div class="contact-info fade-in">
+        <p>I welcome inquiries from students, collaborators, journalists, and anyone interested in Human-Robot Interaction research. I typically respond within a few days.</p>
+        <div class="contact-detail">
+          <div class="contact-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></div>
+          <div><small>Email</small><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="482926262925293a2923213e082f25292124662b2725">[email&#160;protected]</a></span></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><small>Location</small><span>Brest, France</span></div>
+        </div>
+        <div class="social-links">
+          <a href="https://scholar.google.com/citations?user=Mv1Q3EEAAAAJ&hl=en&oi=ao" target="_blank" class="social-btn">Google Scholar</a>
+          <a href="https://www.researchgate.net/profile/Anna-Maria-Velentza" target="_blank" class="social-btn">ResearchGate</a>
+          <a href="https://labsticc.fr/fr/annuaire/velentza-anna-maria" target="_blank" class="social-btn">Lab-STICC</a>
+          <a href="https://lires.uom.gr/about-us-members/" target="_blank" class="social-btn">LIRES Lab</a>
+          <a href="https://www.linkedin.com/in/anna-maria-velentza-80876b104/" target="_blank" class="social-btn">LinkedIn</a>
+        </div>
+      </div>
+      <div class="fade-in" style="transition-delay:0.15s">
+        <div class="contact-form-wrap">
+          <div class="form-title">Send a Message</div>
+          <div id="contactFormFields">
+            <div class="contact-form">
+              <div class="form-row">
+                <div class="form-group"><label for="fname">First Name *</label><input type="text" id="fname" placeholder="Your name"></div>
+                <div class="form-group"><label for="lname">Last Name</label><input type="text" id="lname" placeholder="Your last name"></div>
+              </div>
+              <div class="form-group"><label for="cemail">Email Address *</label><input type="email" id="cemail" placeholder="you@example.com"></div>
+              <div class="form-group"><label for="csubject">Topic</label>
+                <select id="csubject">
+                  <option value="" disabled selected>Select a topic...</option>
+                  <option>Research Collaboration</option>
+                  <option>PhD / MSc Student Inquiry</option>
+                  <option>Speaking Invitation</option>
+                  <option>Media / Press</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group"><label for="cmessage">Message *</label><textarea id="cmessage" placeholder="Your message..."></textarea></div>
+              <div class="form-footer">
+                <span class="form-note">I typically reply within 2–3 business days.</span>
+                <button class="btn-send" id="sendBtn" onclick="submitForm()">Send Message</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon">✦</div>
+            <h3>Message Sent</h3>
+            <p>Thank you for reaching out.<br>I'll be in touch soon.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Dr. Anna-Maria Velentza · All rights reserved</p>
+  <div class="footer-links">
+    <a href="https://scholar.google.com/citations?user=Mv1Q3EEAAAAJ&hl=en&oi=ao" target="_blank">Google Scholar</a>
+    <a href="https://www.researchgate.net/profile/Anna-Maria-Velentza" target="_blank">ResearchGate</a>
+    <a href="https://labsticc.fr/fr/annuaire/velentza-anna-maria" target="_blank">Lab-STICC</a>
+    <a href="https://www.linkedin.com/in/anna-maria-velentza-80876b104/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  async function submitForm() {
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const email = document.getElementById('cemail').value.trim();
+    const subject = document.getElementById('csubject').value;
+    const message = document.getElementById('cmessage').value.trim();
+    if (!fname || !email || !message) { alert('Please fill in Name, Email, and Message.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+    const btn = document.getElementById('sendBtn');
+    btn.textContent = 'Sending…'; btn.disabled = true;
+    const FORMSPREE_ID = 'mqeganbr';
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: fname + (lname ? ' ' + lname : ''), email, subject: subject || 'Website inquiry', message })
+      });
+      if (res.ok) {
+        document.getElementById('contactFormFields').style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else { alert('Something went wron
