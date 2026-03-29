@@ -501,4 +501,4 @@
       if (res.ok) {
         document.getElementById('contactFormFields').style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
-      } else { alert('Something went wron
+      } else {          const data = await res.json();         alert('Error: ' + (data.error || 'Something went wrong. Please try again.'));         btn.textContent = 'Send Message'; btn.disabled = false;       }     } catch(err) {       alert('Network error. Please check your connection and try again.');       btn.textContent = 'Send Message'; btn.disabled = false;     }   }
